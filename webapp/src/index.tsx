@@ -12,6 +12,7 @@ interface PostData {
     id?: number;
     user?: string;
     reply_to?: number;
+    likes?: number;
     content?: string;
 };
 
@@ -33,6 +34,7 @@ class PostForm extends React.Component<{}, PostFormState> {
                 id: 0,
                 user: 'bob',
                 reply_to: 0,
+                likes: 1,
                 content: 'This is a test'
             },
             error: '',
@@ -92,6 +94,14 @@ class PostForm extends React.Component<{}, PostFormState> {
                         /></td>
                     </tr>
                     <tr>
+                        <td>Likes</td>
+                        <td><input
+                            style={{ width: 500 }}
+                            value={this.state.data.likes}
+                            onChange={e => this.setData({ likes: +e.target.value })}
+                        /></td>
+                    </tr>
+                    <tr>
                         <td>Reply To</td>
                         <td><input
                             style={{ width: 500 }}
@@ -135,13 +145,14 @@ class Messages extends React.Component<{}, { content: string }> {
                     json: true, code: 'talk', scope: '', table: 'message', limit: 1000,
                 });
                 let content =
-                    'id          reply_to      user          content\n' +
-                    '=============================================================\n';
+                    'id          reply_to      user          likes         content\n' +
+                    '=======================================================================\n';
                 for (let row of rows.rows)
                     content +=
                         (row.id + '').padEnd(12) +
                         (row.reply_to + '').padEnd(12) + '  ' +
                         row.user.padEnd(14) +
+                        (row.likes + '').padEnd(12) + '  ' +
                         row.content + '\n';
                 this.setState({ content });
             } catch (e) {
